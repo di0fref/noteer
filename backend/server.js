@@ -75,7 +75,7 @@ app.get("/folders", (req, res) => {
 
 app.get("/folders/byparent/:parent_id", (req, res) => {
 	db.query(
-		"SELECT c.id as id, c.name, count(n.id) as count, parent_id FROM categories c left join notes n on (n.category_id = c.id and n.deleted =0)  where parent_id = ? group by parent_id, name, id",
+		"SELECT * from folders where parent_id = ?",
 		req.params.parent_id,
 		(err, result) => {
 			if (err) {

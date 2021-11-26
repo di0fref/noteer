@@ -13,7 +13,7 @@ function SideMenu(props) {
             })
     }, [])
 
-    console.log(folders);
+    // console.log(folders);
     return (
         <ul>
             {folders.map((folder) => {
