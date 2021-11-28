@@ -80,11 +80,11 @@ a {
     width: 300px;
     height: 100vh;
     /*transform: translateX(-45%);*/
-    background-color: var(--bg);
-    border: var(--border);
-    border-radius: var(--border-radius);
+    /*background-color: var(--bg);*/
+    /*border: var(--border);*/
+    /*border-radius: var(--border-radius);*/
     padding: 1rem;
-    overflow: hidden;
+    /*overflow: auto;*/
     transition: height var(--speed) ease;
 }
 

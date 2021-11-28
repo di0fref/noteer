@@ -25,6 +25,75 @@ class FolderService {
         return http.delete(`/folder/delete/${id}`);
     }
 
+    notesByFolderId(id) {
+        return http.get(`/notes/folder/${id}`);
+    }
+
+    /**************************************** */
+
+    fetchJson = (url) => fetch(url).then((r) => r.json());
+
+    getResult = (parent) => {
+        return this.fetchJson(`http://localhost:4000/folders/parent/${parent}`).then(
+            (items) => Promise.all(
+                items.map(this.getResultAux)
+            )
+        );
+    }
+
+    getNotesCount = (folder) => {
+        return this.fetchJson(`http://localhost:4000/notes/count/${folder}`).then(
+            (c) => Promise.all(
+                c.map(this.getNoteCountAux)
+            )
+        );
+    }
+
+    getNoteCountAux = async (t = {}) => {
+
+
+        console.log(t)
+       // if(t.folder_id !== null){
+       //     const c = await this.getNotesCount(t.folder_id)
+       //     return {
+       //         ...t,
+       //         c
+       //     }
+       // }
+
+       return null;
+
+
+        // {t.folder_id ? (
+
+
+        // count: await this.getNotesCount(t.folder_id),
+    };
+
+
+
+    getNoteResult = (folder) => {
+        return this.fetchJson(`http://localhost:4000/notes/folder/${folder}`).then();
+    }
+
+    getNoteAux = async (t = {}) => ({
+        ...t,
+        items: await this.getNoteResult(t.id),
+    });
+
+    getResultAux = async (t = {}) => {
+
+        const folders = await this.getResult(t.id)
+        // const c = await this.getNotesCount(t.id)
+        const notes = await this.getNoteResult(t.id)
+        var items = folders.concat(notes);
+        return {
+            ...t,
+            items,
+            // c
+        };
+    };
+    /******************************************* */
 }
 
 export default new FolderService();
