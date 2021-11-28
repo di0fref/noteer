@@ -73,11 +73,9 @@ app.get("/folders", (req, res) => {
     );
 });
 
-// "SELECT *, count(n.id) as count, parent_id FROM folders c left join notes n on (n.folder_id = c.id) where parent_id = ? order by sort_order group by parent_id",
-
 app.get("/folders/parent/:parent_id", (req, res) => {
     db.query(
-        "SELECT f.id, f.name as label, concat('folder') as type, count(n.id) as count, parent_id FROM folders f left join notes n on (n.folder_id = f.id) where parent_id = ? group by parent_id order by sort_order",
+        "SELECT id, name as label, concat('folder') as type from folders where parent_id =?",
         req.params.parent_id,
         (err, result) => {
             if (err) {
@@ -117,20 +115,20 @@ app.get("/notes/count/:folder_id", (req, res) => {
 		}
 	);
 });
-//
-// app.get("/notes", (req, res) => {
-// 	db.query(
-// 		"SELECT n.* , c.name as category_name FROM notes n left join categories c on n.category_id = c.id where deleted = 0 order by date_modified desc",
-// 		(err, result) => {
-// 			if (err) {
-// 				console.log(err);
-// 			} else {
-// 				res.send(result);
-// 			}
-// 		}
-// 	);
-// });
-//
+
+app.get("/notes", (req, res) => {
+	db.query(
+		"SELECT n.* , f.name as folde_name FROM notes n left join folders f on n.folder_id = f.id where deleted = 0 order by date_modified desc",
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				res.send(result);
+			}
+		}
+	);
+});
+
 app.get("/notes/folder/:id", (req, res) => {
     db.query(
         "SELECT *, name as label, concat('note') as type from notes where folder_id = ?",
@@ -144,20 +142,20 @@ app.get("/notes/folder/:id", (req, res) => {
         }
     );
 });
-//
-// app.get("/notes/:id", (req, res) => {
-// 	db.query(
-// 		"SELECT * FROM notes where id = ? and deleted = 0",
-// 		req.params.id,
-// 		(err, result) => {
-// 			if (err) {
-// 				console.log(err);
-// 			} else {
-// 				res.send(result);
-// 			}
-// 		}
-// 	);
-// });
+
+app.get("/note/:id", (req, res) => {
+	db.query(
+		"SELECT * FROM notes where id = ? and deleted = 0",
+		req.params.id,
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				res.send(result);
+			}
+		}
+	);
+});
 //
 // app.put("/notes/update/:id", (req, res) => {
 // 	console.log("cyyjjy");

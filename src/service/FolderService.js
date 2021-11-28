@@ -51,9 +51,7 @@ class FolderService {
 
     getNoteCountAux = async (t = {}) => {
 
-
-        console.log(t)
-       // if(t.folder_id !== null){
+        // if(t.folder_id !== null){
        //     const c = await this.getNotesCount(t.folder_id)
        //     return {
        //         ...t,
@@ -63,11 +61,6 @@ class FolderService {
 
        return null;
 
-
-        // {t.folder_id ? (
-
-
-        // count: await this.getNotesCount(t.folder_id),
     };
 
 
