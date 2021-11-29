@@ -3,7 +3,17 @@ import {List, ListItem, ListItemText, Collapse, ListItemIcon} from '@mui/materia
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
-import {FaFile, FaFileAlt, FaRegFolder, FaRegFolderOpen, FaStar, FaTrash, FaTrashAlt} from "react-icons/all";
+import {
+    FaBars,
+    FaChevronLeft,
+    FaFile,
+    FaFileAlt, FaFolder,
+    FaRegFolder,
+    FaRegFolderOpen,
+    FaStar,
+    FaTrash,
+    FaTrashAlt
+} from "react-icons/all";
 import FolderService from "../../service/FolderService";
 import Avatar from "../Avatar";
 import SearchInput from "../SearchInput";
@@ -14,9 +24,7 @@ function SidebarItem(props) {
 
     const handleClick = (type, id) => {
         setOpen(!open);
-        if (type === "note") {
-            props.noteClicked(type, id)
-        }
+        props.noteClicked(type, id)
     };
 
     useEffect(() => {
@@ -44,7 +52,7 @@ function SidebarItem(props) {
                                 : <FaFileAlt className={`icon`}/>
                             }
                         </div>
-                        <div className={"ml-2"}>{props.items.label}</div>
+                        <div className={"ml-2 text-s"}>{props.items.label}</div>
                     </div>
                 </ListItemText>
                 {(props.items.items && props.items.items.length > 0)
@@ -80,17 +88,11 @@ function SidebarItem(props) {
 function Sidebar(props) {
     return (
         <div className="flex-grow">
-            <div className={"mx-4 mt-6"}>
-                <Avatar/>
-            </div>
-            {/*<div className={"search mx-4 mt-6"}>*/}
-            {/*    <input type={"text"} className={"w-full bg-primary p-2 rounded rounded-lg"} placeholder={"Search"}/>*/}
-            {/*</div>*/}
             <SearchInput/>
             <h3 className={`text-xs pl-4 text-muted uppercase tracking-widest font-bold mb-2 mt-6`}>Bookmarks</h3>
-            <div className={"flex justify-start items-center ml-4 text-sm"}>
+            <div className={"flex justify-start items-center ml-4 _text-sm"}>
                 <div><FaStar className={"icon text-accent"}/></div>
-                <div className={"ml-2"}>Bookmark 1</div>
+                <div className={"ml-2 text-s"}>Bookmark 1</div>
             </div>
             <h3 className={`text-xs pl-4 text-muted uppercase tracking-widest font-bold mb-2 mt-6`}>Notebooks</h3>
 
@@ -112,6 +114,7 @@ function Sidebar(props) {
                 <div><FaTrashAlt className={"icon"}/></div>
                 <div className={"ml-2"}>Trash</div>
             </div>
+            <Avatar/>
         </div>
     )
 }

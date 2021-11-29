@@ -3,7 +3,6 @@ import {FaMoon, FaSun} from "react-icons/all";
 
 function Content(props) {
 
-    // const [activeSidebar, setActiveSidebar] = useState(true)
     const [note, setNote] = useState(false)
 
     useEffect(() => {
@@ -33,12 +32,13 @@ function Content(props) {
             {/*</label>*/}
             {/*</div>*/}
 
-            <div className={` ${props.activeSidebar ? "ml-96  " : ""}  ease-in-out transform-gpu transition-all  duration-700 content `}>
+            <div className={` ${props.activeSidebar ? "ml-96" : ""} ease-in-out transform-gpu transition-all duration-700 content -m t-10`}>
                 <div className={"note-content flex flex-col"}>
-                    <div className={"content-header h-10 flex-grow px-6 py-2"}>
-                        {note.name}
+                    <div className={"content-header flex-grow px-6 mt-1"}>
+                        <span className={"font-semibold "}>Customers / {note.name}</span>
                     </div>
-                    <div className={"p-6 flex-grow"}>
+                    <div className={"p-6 flex-grow text-base"}>
+                        Massa text
                         {note
                             ? note.text
                             : ""}
