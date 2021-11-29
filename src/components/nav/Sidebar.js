@@ -5,10 +5,12 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import {FaFile, FaFileAlt, FaRegFolder, FaRegFolderOpen, FaStar, FaTrash, FaTrashAlt} from "react-icons/all";
 import FolderService from "../../service/FolderService";
+import Avatar from "../Avatar";
+import SearchInput from "../SearchInput";
 
 function SidebarItem(props) {
 
-    const [open, setOpen] = useState(true); // Open or closed sidebar menu
+    const [open, setOpen] = useState(false); // Open or closed sidebar menu
 
     const handleClick = (type, id) => {
         setOpen(!open);
@@ -35,16 +37,13 @@ function SidebarItem(props) {
 
             >
                 <ListItemText style={{paddingLeft: props.depth * props.depthStep * 3}} key={`cc-${props.items.id}`}>
-                    {/*<ListItemIcon key={`dd-${props.items.id}`}>*/}
-                    {/*{props.items.type == "folder"*/}
-                    {/*    ? <FaRegFolder className={`icon`}/>*/}
-                    {/*    : <FaFileAlt className={`icon`}/>*/}
-                    {/*}*/}
-                    {/*<FaRegFolder className={`icon`}/>*/}
-                    {/*</ListItemIcon>*/}
-                    {/*<span>{props.items.label}</span>*/}
                     <div className={'flex justify-start items-center'}>
-                        <div><FaRegFolder className={"icon"}/></div>
+                        <div>
+                            {props.items.type == "folder"
+                                ? <FaRegFolder className={`icon`}/>
+                                : <FaFileAlt className={`icon`}/>
+                            }
+                        </div>
                         <div className={"ml-2"}>{props.items.label}</div>
                     </div>
                 </ListItemText>
@@ -81,20 +80,19 @@ function SidebarItem(props) {
 function Sidebar(props) {
     return (
         <div className="flex-grow">
-
             <div className={"mx-4 mt-6"}>
-                Avatar
+                <Avatar/>
             </div>
-            <div className={"search mx-4 mt-6"}>
-                <input type={"text"} className={"w-full bg-primary p-2 rounded rounded-lg"} placeholder={"Search"}/>
+            {/*<div className={"search mx-4 mt-6"}>*/}
+            {/*    <input type={"text"} className={"w-full bg-primary p-2 rounded rounded-lg"} placeholder={"Search"}/>*/}
+            {/*</div>*/}
+            <SearchInput/>
+            <h3 className={`text-xs pl-4 text-muted uppercase tracking-widest font-bold mb-2 mt-6`}>Bookmarks</h3>
+            <div className={"flex justify-start items-center ml-4 text-sm"}>
+                <div><FaStar className={"icon text-accent"}/></div>
+                <div className={"ml-2"}>Bookmark 1</div>
             </div>
-
-            <h3 className={`text-xs pl-4 text-muted uppercase tracking-widest font-bold mb-2 mt-10`}>Bookmarks</h3>
-                <div className={"flex justify-start items-center ml-4 text-sm"}>
-                    <div><FaStar className={"icon text-accent"}/></div>
-                    <div className={"ml-2"}>Bookmark 1</div>
-                </div>
-            <h3 className={`text-xs pl-4 text-muted uppercase tracking-widest font-bold mb-2 mt-10`}>Notebooks</h3>
+            <h3 className={`text-xs pl-4 text-muted uppercase tracking-widest font-bold mb-2 mt-6`}>Notebooks</h3>
 
             <List disablePadding dense key={props.depthStep}>
                 {props.items.map((sidebarItem, index) => (
@@ -110,7 +108,7 @@ function Sidebar(props) {
                     </div>
                 ))}
             </List>
-            <div className={"trash flex justify-start items-center text-sm ml-4 mt-20"}>
+            <div className={"trash flex justify-start items-center text-sm ml-4 mt-14"}>
                 <div><FaTrashAlt className={"icon"}/></div>
                 <div className={"ml-2"}>Trash</div>
             </div>
