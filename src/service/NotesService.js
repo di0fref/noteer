@@ -33,9 +33,10 @@ class NotesService {
         return http.delete(`/note/delete/${id}`);
     }
 
-    // setBookMark(id, data) {
-    //     return http.put(`/note/bookmark/${id}`, data)
-    // }
+    getBookMarks(searchParams) {
+        return http.get(`/notes/bookmarks`);
+
+    }
 }
 
 export default new NotesService();

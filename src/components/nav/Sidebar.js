@@ -122,9 +122,10 @@ function SidebarItem(props, {isDragging, id_}) {
                                 : <FaFileAlt className={`icon`}/>
 
                             : null}
-
-
-                        <div className={`ml-2 text-s ${props.class}`}>{props.items.label}</div>
+                        
+                        <div className={`ml-2 text-s ${props.class}`}>
+                            {`${props.items.label?props.items.label:'\u00a0'}`}
+                        </div>
                     </div>
                 </ListItemText>
                 {(props.items.items && props.items.items.length > 0)
@@ -175,14 +176,18 @@ function Sidebar(props) {
             <SearchInput/>
             <h3 className={`text-xs pl-4 text-muted uppercase tracking-widest font-bold mb-2 mt-6`}>Bookmarks</h3>
             <div className={"flex justify-start items-center ml-4 _text-sm"}>
-                <div><FaStar className={"icon text-accent"}/></div>
-                <div className={"ml-2 text-s"}>Bookmark 1</div>
+                {props.bookmarks.map((bookmark, index) => (
+                    <div className={"flex items-center justify-start"}>
+                        <div><FaStar className={"icon text-accent"}/></div>
+                        <div className={"ml-2 text-s"}>{bookmark.label}</div>
+                    </div>
+                ))}
+
             </div>
             <h3 className={`text-xs pl-4 text-muted uppercase tracking-widest font-bold mb-2 mt-6`}>Notebooks</h3>
 
             <List disablePadding dense key={props.depthStep}>
                 {props.items.map((sidebarItem, index) => (
-                    // <div key={index}>
                     <SidebarItem
                         key={`${sidebarItem.name}${index}`}
                         depthStep={10}
@@ -194,7 +199,6 @@ function Sidebar(props) {
                         class={""}
                         icon={true}
                     />
-                    // </div>
                 ))}
 
                 {/*Dropref for moving items to root */}

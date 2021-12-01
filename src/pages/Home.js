@@ -17,6 +17,7 @@ import {Router} from "react-router-dom";
 import Sidebar from "../components/nav/Sidebar";
 import NotesService from "../service/NotesService";
 import Dropdown from "../components/Dropdown";
+import {Tooltip} from "@mui/material";
 
 const activeSide = "side ease-in-out w-96 transform-gpu transition-all_ fixed duration-700 flex justify-center p-2"
 const hiddenSide = "side ease-in-out w-96 transform-gpu transition-all_ fixed duration-700  flex justify-center p-2 -translate-x-96"
@@ -31,13 +32,15 @@ function Home() {
     const [clickedId, setClickedId] = useState()
     const [mobileView, setMobileView] = useState(false)
     const [dropped, setDropped] = useState(false);
+    const [bookMarks, setBookMarks] = useState([]);
 
     useEffect(() => {
         (async () => {
             let response = await FolderService.getResult(0);
             let notesWithoutFolder = await FolderService.notesByFolderId(0);
+            let bookmarks = await NotesService.getBookMarks();
+            setBookMarks(bookmarks.data)
             setTreeData(response.concat(notesWithoutFolder.data));
-            console.log(treeData)
             setDropped(false);
         })();
 
@@ -52,11 +55,9 @@ function Home() {
         }
 
         window.addEventListener('resize', handleResize)
-
-    }, [dropped])
+    }, [dropped, note])
 
     const droppedHandler = () => {
-        console.log("droppedHandler");
         setDropped(true);
     }
     const noteClicked = (type, id) => {
@@ -81,6 +82,15 @@ function Home() {
     const toggleSidebar = () => {
         setActiveSidebar(!activeSidebar);
     }
+
+    const setBookMark = (note) => {
+        note.bookmark = !note.bookmark
+        NotesService.update(note.id, note).then((result) => {
+            NotesService.get(note.id).then((result) => {
+                setNote(result.data[0])
+            })
+        })
+    }
     return (
         <>
             {/* HEADER */}
@@ -97,12 +107,16 @@ function Home() {
                                 <div className={""}>
                                     <div className={`transition-all duration-700 sidetop w-96 h-10 w-10 py-2 ${activeSidebar ? "" : "-ml-96"}`}>
                                         <div className={"flex justify-center items-center"}>
-                                            <button className={"mx-2"}>
-                                                <FaRegFolder className={"w-5 h-5 text-muted hover:text-hover-accent"}/>
-                                            </button>
-                                            <button className={"mx-2"}>
-                                                <FaFileAlt className={"w-5 h-5 text-muted hover:text-hover-accent"}/>
-                                            </button>
+                                            <Tooltip title={"New Folder"}>
+                                                <button className={"mx-2"}>
+                                                    <FaRegFolder className={"w-5 h-5 text-muted hover:text-hover-accent"}/>
+                                                </button>
+                                            </Tooltip>
+                                            <Tooltip title={"New Note"}>
+                                                <button className={"mx-2"}>
+                                                    <FaFileAlt className={"w-5 h-5 text-muted hover:text-hover-accent"}/>
+                                                </button>
+                                            </Tooltip>
                                         </div>
                                     </div>
                                 </div>
@@ -136,11 +150,11 @@ function Home() {
             {/*SIDEBAR */}
             <div className="sidebar transform relative transition-all duration-700 ">
                 <div className={`${activeSidebar ? activeSide : hiddenSide}`}>
-                    <Sidebar items={treeData} noteClicked={noteClicked} clicked_id={clickedId} droppedHandler={droppedHandler}/>
+                    <Sidebar items={treeData} noteClicked={noteClicked} clicked_id={clickedId} droppedHandler={droppedHandler} bookmarks={bookMarks}/>
                 </div>
             </div>
             {/*<Notes/>*/}
-            <Content activeSidebar={activeSidebar} note={note}/>
+            <Content activeSidebar={activeSidebar} note={note} setBookMark={setBookMark}/>
         </>
     )
 }

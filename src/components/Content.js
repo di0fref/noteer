@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {FaMoon, FaStar, FaSun} from "react-icons/all";
 import Dropdown from "./Dropdown";
 import NotesService from "../service/NotesService";
+import {Tooltip} from "@mui/material";
 
 function Content(props) {
 
@@ -10,18 +11,8 @@ function Content(props) {
 
     useEffect(() => {
         setNote(props.note)
-    }, [props.note, note])
-
-    const setBookMark = () => {
-
-        note.bookmark = !note.bookmark
-        setNote(note);
-
-        NotesService.update(note.id, note).then((result) => {
-            console.log(result);
-        })
-    }
-
+    }, [props.note])
+console.log(note);
     return (
 
         <>
@@ -48,21 +39,30 @@ function Content(props) {
             <div className={` ${props.activeSidebar ? "ml-96" : ""} ease-in-out transform-gpu transition-all duration-700 content -m t-10`}>
                 <div className={"note-content flex flex-col"}>
                     <div className={"content-header flex-grow px-6 mt-1"}>
-
                         <div className={"flex justify-start items-center "}>
-                            {/*<div><FaStar className={`icon ${note.bookmark?"text-accent":null}`}/></div>*/}
-                            <button onClick={setBookMark}>
-                                <FaStar className={`icon ${note.bookmark ? "text-accent" : null}`}/>
-                            </button>
 
-                            <div className={"ml-2 font-semibold"}>Customers / {note.name}</div>
+                            {note.id
+                                ? (
+                                    <>
+                                        <Tooltip title={`${note.bookmark ? "Remove Bookmark" : "Set Bookmark"}`}>
+                                            <button onClick={() => props.setBookMark(note)} >
+                                                <FaStar className={`icon ${note.bookmark ? "text-accent" : null}`}/>
+                                            </button>
+                                        </Tooltip>
+                                        <div className={"ml-2 font-semibold"}>
+                                            Customers / {note.name}
+                                        </div>
+                                    </>
+                                )
+                                : (null)
+
+                            }
 
                         </div>
-
                     </div>
                     <div className={"p-6 flex-grow text-base"}>
 
-                        {note
+                        {note.id
                             ? note.text
                             : ""}
                     </div>

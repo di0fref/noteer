@@ -222,7 +222,34 @@ app.put("/note/update/:id", (req, res) => {
 		}
 	);
 });
+app.get("/notes/bookmarks", (req, res) => {
+    db.query(
+        "SELECT *, name as label, concat('note') as type from notes where bookmark = 1",
+        req.params.id,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
 
+
+app.get("/notes/search", (req, res) => {
+    db.query(
+        "SELECT *, name as label, concat('note') as type from notes where folder_id = ?",
+        req.params.id,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
 //
 // app.delete("/notes/delete/:id", (req, res) => {
 // 	db.query(
