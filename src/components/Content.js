@@ -3,6 +3,7 @@ import {FaMoon, FaStar, FaSun} from "react-icons/all";
 import Dropdown from "./Dropdown";
 import NotesService from "../service/NotesService";
 import {Tooltip} from "@mui/material";
+import Editor from "./Editor";
 
 function Content(props) {
 
@@ -12,7 +13,6 @@ function Content(props) {
     useEffect(() => {
         setNote(props.note)
     }, [props.note])
-console.log(note);
     return (
 
         <>
@@ -62,9 +62,10 @@ console.log(note);
                     </div>
                     <div className={"p-6 flex-grow text-base"}>
 
-                        {note.id
-                            ? note.text
-                            : ""}
+                        {/*{note.id*/}
+                        {/*    ? note.text*/}
+                        {/*    : ""}*/}
+                        <Editor/>
                     </div>
                 </div>
             </div>

@@ -174,9 +174,9 @@ html[data-theme='dark'] .d-block-dark {
 	color: var(--text-accent);
 }
 
-.icon:hover {
-	color: var(--text-accent-hover);
-}
+/*.icon:hover {*/
+/*	color: var(--text-accent-hover);*/
+/*}*/
 
 .menu-title {
 	background: var(--background-primary);
@@ -261,4 +261,26 @@ input {
 .text-more-muted{
 	opacity: 0.5;
 	color: var(--text-muted)
+}
+
+/* Modal style */
+.modal{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 400px;
+	background-color: var(--background-primary-alt);
+	border: 1prx solid var(--background-modifier-border);
+	box-shadow: var(--background-modifier-box-shadow);
+}
+
+.MuiTooltip-tooltip{
+	font-size: 0.875rem !important;
+	line-height: 1.25rem !important;
+	background-color: var(--background-modifier-cover) !important;
+	/*padding: 10px!important;*/
+}
+.MuiTooltip-Arrow{
+	color: var(--background-modifier-cover) !important;
 }
