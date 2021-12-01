@@ -1,5 +1,6 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {FaMoon, FaSun} from "react-icons/all";
+import Dropdown from "./Dropdown";
 
 function Content(props) {
 
@@ -38,7 +39,7 @@ function Content(props) {
                         <span className={"font-semibold "}>Customers / {note.name}</span>
                     </div>
                     <div className={"p-6 flex-grow text-base"}>
-                        Massa text
+
                         {note
                             ? note.text
                             : ""}

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html[data-theme='dark'] {
 	--background-primary: #202020;
 	--background-secondary: #161616;
@@ -245,3 +249,8 @@ input {
 	line-height: 1.5rem;
 }
 
+@media screen and (max-width: 768px){
+	.sidebar{
+
+	}
+}
