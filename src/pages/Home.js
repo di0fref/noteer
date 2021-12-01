@@ -30,13 +30,15 @@ function Home() {
     const [folder, setFolder] = useState()
     const [clickedId, setClickedId] = useState()
     const [mobileView, setMobileView] = useState(false)
+    const [dropped, setDropped] = useState(false);
 
     useEffect(() => {
         (async () => {
             let response = await FolderService.getResult(0);
             let notesWithoutFolder = await FolderService.notesByFolderId(0);
             setTreeData(response.concat(notesWithoutFolder.data));
-            // console.log(treeData)
+            console.log(treeData)
+            setDropped(false);
         })();
 
         function handleResize() {
@@ -51,8 +53,12 @@ function Home() {
 
         window.addEventListener('resize', handleResize)
 
-    }, [])
+    }, [dropped])
 
+    const droppedHandler = () => {
+        console.log("droppedHandler");
+        setDropped(true);
+    }
     const noteClicked = (type, id) => {
         setClickedId(id);
         if (type === "note") {
@@ -130,7 +136,7 @@ function Home() {
             {/*SIDEBAR */}
             <div className="sidebar transform relative transition-all duration-700 ">
                 <div className={`${activeSidebar ? activeSide : hiddenSide}`}>
-                    <Sidebar items={treeData} noteClicked={noteClicked} clicked_id={clickedId}/>
+                    <Sidebar items={treeData} noteClicked={noteClicked} clicked_id={clickedId} droppedHandler={droppedHandler}/>
                 </div>
             </div>
             {/*<Notes/>*/}

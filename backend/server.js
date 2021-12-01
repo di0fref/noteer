@@ -2,7 +2,7 @@ const express = require("express");
 const mysql = require("mysql2");
 require("dotenv").config();
 let cors = require("cors");
-const {default: Moment} = require("react-moment");
+var moment = require('moment');
 
 const app = express();
 app.use(express.json()); // parses incoming requests with JSON payloads
@@ -17,7 +17,6 @@ app.use(function (req, res, next) {
     }
     next();
 });
-//create connection to database
 const db = mysql.createPool({
     host: process.env.DB_HOST, //localhost
     user: process.env.DB_USER, //root
@@ -35,6 +34,12 @@ const options = {
 };
 
 app.use(cors(options));
+
+const getDateModified = () => {
+	return moment().format("YYYY-MM-DD HH:mm:ss");
+}
+
+
 
 app.get("/folders/count", (req, res) => {
     db.query("SELECT count(*) as count from categories", (err, result) => {
@@ -156,21 +161,68 @@ app.get("/note/:id", (req, res) => {
 		}
 	);
 });
-//
-// app.put("/notes/update/:id", (req, res) => {
-// 	console.log("cyyjjy");
-// 	db.query(
-// 		"UPDATE notes set name = ?, text = ? where id = ?",
-// 		[req.body.title, req.body.text, req.params.id],
-// 		(err, result) => {
-// 			if (err) {
-// 				console.log(err);
-// 			} else {
-// 				res.send(result);
-// 			}
-// 		}
-// 	);
-// });
+
+
+app.put("/note/update/folder/:id", (req, res) => {
+	db.query(
+		"UPDATE notes set folder_id = ? where id = ?",
+		[req.body.folder_id, req.params.id],
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				res.send(result);
+			}
+		}
+	);
+});
+
+app.put("/folder/update/folder/:id", (req, res) => {
+	db.query(
+		"UPDATE folders set parent_id = ? where id = ?",
+		[req.body.folder_id, req.params.id],
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				res.send(result);
+			}
+		}
+	);
+});
+
+app.put("/note/bookmark/:id", (req, res) => {
+
+    console.log(req.params.id);
+    console.log(req.body.bookmark);
+
+	db.query(
+		"UPDATE notes set bookmark = ? where id = ?",
+		[req.body.bookmark, req.params.id],
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				res.send(result);
+			}
+		}
+	);
+});
+
+app.put("/note/update/:id", (req, res) => {
+	db.query(
+		"UPDATE notes set name = ?, text = ?, bookmark = ?, date_modified = ? where id = ?",
+		[req.body.name, req.body.text, req.body.bookmark, getDateModified(),  req.params.id],
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				res.send(result);
+			}
+		}
+	);
+});
+
 //
 // app.delete("/notes/delete/:id", (req, res) => {
 // 	db.query(

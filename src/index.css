@@ -254,3 +254,11 @@ input {
 
 	}
 }
+.sidebar-active{
+	background-color: var(--text-accent-hover)!important;
+}
+
+.text-more-muted{
+	opacity: 0.5;
+	color: var(--text-muted)
+}

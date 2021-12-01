@@ -20,29 +20,46 @@ import SearchInput from "../SearchInput";
 import {useDrag} from "react-dnd";
 import {ItemTypes} from "../Constants";
 import {useDrop} from "react-dnd";
+import NotesService from "../../service/NotesService";
 
 function SidebarItem(props, {isDragging, id_}) {
 
-    const [{opacity}, dragRef] = useDrag(
+    const [{opacity}, drag] = useDrag(
         () => ({
             type: ItemTypes.CARD,
-            item: props.items.id,
+            item: props.items,
             collect: (monitor) => ({
                 opacity: monitor.isDragging() ? 0.1 : 1,
             }),
             end: (item, monitor) => {
                 const dropResult = monitor.getDropResult();
                 if (item && dropResult) {
+                    switch (item.type) {
+                        case "note":
+                            console.log(`Moving note ${item.id} into folder ${dropResult.id}`);
 
-                    console.log(item)
-                    console.log(dropResult)
-                    // NotesService.updateCategory(item.note.id, {
-                    //     category_id: dropResult.category_id,
-                    // }).then((result) => {
-                    //     props.noteDropped();
-                    // }).catch((err) => {
-                    //     console.log(err);
-                    // });
+                            if (item.id !== dropResult.id) {
+                                NotesService.updateFolder(item.id, {folder_id: dropResult.id}).then((result) => {
+                                    /* Send signal to update sidebar */
+                                    props.droppedHandler();
+                                });
+                            } else {
+                                console.log("Drag ref == Drop ref:: Skipping");
+                            }
+                            break;
+                        case "folder":
+                            console.log(`Moving folder ${item.id} into folder ${dropResult.id}`);
+                            if (item.id !== dropResult.id) {
+                                FolderService.updateFolder(item.id, {folder_id: dropResult.id}).then((result) => {
+                                    /* Send signal to update sidebar */
+                                    props.droppedHandler();
+                                });
+
+                            } else {
+                                console.log("Drag ref == Drop ref:: Skipping");
+                            }
+                            break;
+                    }
                 }
             },
         }), []
@@ -51,7 +68,7 @@ function SidebarItem(props, {isDragging, id_}) {
 
     const [{canDrop, isOver}, drop] = useDrop(() => ({
         accept: ItemTypes.CARD,
-        drop: () => ({name: "SidebarLink", folder_id: props.folder.id}),
+        drop: () => ({name: "SidebarLink", id: props.items.id, type: props.items.type}),
         collect: (monitor) => ({
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
@@ -59,21 +76,18 @@ function SidebarItem(props, {isDragging, id_}) {
     }));
 
 
+    /* Attach both drag and drop ref to the component. */
+    const attacheRef = (el) => {
+        drag(el)
+        drop(el)
+    }
+
     const isActive = canDrop && isOver;
     const [open, setOpen] = useState(false); // Open or closed sidebar menu
     const handleClick = (type, id) => {
         setOpen(!open);
         props.noteClicked(type, id)
     };
-
-    MyComponent = DragSource('MyComponent', elementSource, (connect, monitor) => ({
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
-    }))(MyComponent);
-
-    MyComponent = DropTarget('MyComponent', elementTarget, connect => ({
-        connectDropTarget: connect.dropTarget(),
-    }))(MyComponent);
 
 
     useEffect(() => {
@@ -84,7 +98,7 @@ function SidebarItem(props, {isDragging, id_}) {
         <>
             <ListItem button dense
                       id={props.items.id}
-                      ref={dragRef}
+                      ref={attacheRef}
                       style={{opacity}}
                       role="card"
                       onClick={() => {
@@ -95,17 +109,22 @@ function SidebarItem(props, {isDragging, id_}) {
                           (props.items.id === props.clicked_id) ? true : false
                       }
                       disableRipple disableTouchRipple
+                      className={`${isActive ? "sidebar-active" : ""}`}
             >
 
                 <ListItemText style={{paddingLeft: props.depth * props.depthStep * 3}} key={`cc-${props.items.id}`}>
                     <div className={'flex justify-start items-center'}>
-                        {/*<div>*/}
-                        {props.items.type == "folder"
-                            ? <FaRegFolder className={`icon`}/>
-                            : <FaFileAlt className={`icon`}/>
-                        }
-                        {/*</div>*/}
-                        <div className={"ml-2 text-s"}>{props.items.label}</div>
+
+                        {(props.icon === true)
+                            ?
+                            (props.items.type == "folder")
+                                ? <FaRegFolder className={`icon`}/>
+                                : <FaFileAlt className={`icon`}/>
+
+                            : null}
+
+
+                        <div className={`ml-2 text-s ${props.class}`}>{props.items.label}</div>
                     </div>
                 </ListItemText>
                 {(props.items.items && props.items.items.length > 0)
@@ -127,6 +146,10 @@ function SidebarItem(props, {isDragging, id_}) {
                                         items={subItem}
                                         noteClicked={props.noteClicked}
                                         clicked_id={props.clicked_id}
+                                        droppedHandler={props.droppedHandler}
+                                        class={""}
+                                        icon={true}
+
                                     />
                                 </div>
                             ))}
@@ -138,6 +161,15 @@ function SidebarItem(props, {isDragging, id_}) {
 }
 
 function Sidebar(props) {
+
+    /* Dropref for moving items to root */
+    const dropref_item = {
+        "id": 0,
+        "label": "",
+        "type": "",
+        "items": []
+    }
+
     return (
         <div className="flex-grow">
             <SearchInput/>
@@ -158,9 +190,26 @@ function Sidebar(props) {
                         noteClicked={props.noteClicked}
                         items={sidebarItem}
                         clicked_id={props.clicked_id}
+                        droppedHandler={props.droppedHandler}
+                        class={""}
+                        icon={true}
                     />
                     // </div>
                 ))}
+
+                {/*Dropref for moving items to root */}
+
+                <SidebarItem
+                    key={`${dropref_item.name}`}
+                    depthStep={10}
+                    depth={0}
+                    noteClicked={props.noteClicked}
+                    items={dropref_item}
+                    clicked_id={props.clicked_id}
+                    droppedHandler={props.droppedHandler}
+                    class={"text-more-muted"}
+                    icon={false}
+                />
             </List>
             <div className={"trash flex justify-start items-center text-sm ml-4 mt-14"}>
                 <div><FaTrashAlt className={"icon"}/></div>

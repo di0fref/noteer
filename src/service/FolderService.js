@@ -29,6 +29,11 @@ class FolderService {
         return http.get(`/notes/folder/${id}`);
     }
 
+    updateFolder(id, data) {
+        return http.put(`/folder/update/folder/${id}`, data);
+    }
+
+
     /**************************************** */
 
     fetchJson = (url) => fetch(url).then((r) => r.json());
@@ -52,17 +57,16 @@ class FolderService {
     getNoteCountAux = async (t = {}) => {
 
         // if(t.folder_id !== null){
-       //     const c = await this.getNotesCount(t.folder_id)
-       //     return {
-       //         ...t,
-       //         c
-       //     }
-       // }
+        //     const c = await this.getNotesCount(t.folder_id)
+        //     return {
+        //         ...t,
+        //         c
+        //     }
+        // }
 
-       return null;
+        return null;
 
     };
-
 
 
     getNoteResult = (folder) => {
