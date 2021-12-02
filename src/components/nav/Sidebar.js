@@ -23,8 +23,8 @@ import {useDrop} from "react-dnd";
 import NotesService from "../../service/NotesService";
 import {Link} from "react-router-dom";
 import Trash from "../Trash";
-import ReactTooltip from 'react-tooltip';
 import Moment from "react-moment";
+import ArrowTooltips from "../Tooltip";
 
 var moment = require('moment');
 
@@ -110,8 +110,7 @@ function SidebarItem(props, {isDragging, tool}) {
     return (
 
         <>
-            <ReactTooltip/>
-            <Tooltip
+            <ArrowTooltips
                 placement={"right"}
                 arrow
                 title={
@@ -126,7 +125,7 @@ function SidebarItem(props, {isDragging, tool}) {
                         : ""
                 }>
                 <ListItem button dense
-                          id={props.items.id}
+                          id={`item-${props.items.id}`}
                           ref={attacheRef}
                           style={{opacity}}
                           role="card"
@@ -139,8 +138,6 @@ function SidebarItem(props, {isDragging, tool}) {
                           }
                           disableRipple disableTouchRipple
                           className={`${isActive ? "sidebar-active" : ""}`}
-                    // data-tip={(props.items.type == "note") ? props.items.date_modified : ""}
-                    // data-offset="{'top': 0, 'right': 100}"
                 >
 
                     <ListItemText style={{paddingLeft: props.depth * props.depthStep * 3}} key={`cc-${props.items.id}`}>
@@ -165,7 +162,7 @@ function SidebarItem(props, {isDragging, tool}) {
                         : null}
                     {/*<span className={`text-sm text-muted`}>{count}</span>*/}
                 </ListItem>
-            </Tooltip>
+            </ArrowTooltips>
             {(props.items.items && props.items.items.length > 0) ? (
                 <div key={`er-${props.items.id}`}>
                     <Collapse in={open} timeout="auto" unmountOnExit key={`ee-${props.items.id}`}>

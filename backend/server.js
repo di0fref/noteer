@@ -265,24 +265,26 @@ app.get("/notes/search", (req, res) => {
 // 	);
 // });
 //
-// app.post("/notes/create", (req, res) => {
-// 	db.query(
-// 		"INSERT into notes (id, name, text, date_modified, category_id) values (?,?,?,?,?)",
-// 		[
-// 			req.body.id,
-// 			req.body.title,
-// 			req.body.text,
-// 			req.body.date_modified,
-// 			req.body.category_id,
-// 		],
-// 		(err, result) => {
-// 			if (err) {
-// 				console.log(err);
-// 			} else {
-// 				console.log(result);
-// 				res.send(result);
-// 			}
-// 		}
-// 	);
-// });
+
+
+app.post("/note/create", (req, res) => {
+	db.query(
+		"INSERT into notes (id, name, text, date_modified, folder_id) values (?,?,?,?,?)",
+		[
+			req.body.id,
+			req.body.name,
+			req.body.text,
+            getDateModified(),
+			req.body.folder_id,
+		],
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log(result);
+				res.send(result);
+			}
+		}
+	);
+});
 

@@ -62,10 +62,13 @@ function Content(props) {
                     </div>
                     <div className={"p-6 flex-grow text-base"}>
 
+                        {note.id
+                            ?
+                        <Editor content={note.text}/>
+                            : ""}
+
                         {/*{note.id*/}
-                        {/*    ? note.text*/}
-                        {/*    : ""}*/}
-                        <Editor/>
+
                     </div>
                 </div>
             </div>

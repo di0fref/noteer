@@ -1,50 +1,60 @@
-import { useCallback } from 'react';
-import { WysiwygEditor } from '@remirror/react-editors/wysiwyg';
-import {useHelpers, useRemirror} from "@remirror/react";
+import React, {useCallback, useEffect} from 'react';
+import {
+    BoldExtension,
+    MarkdownExtension,
+    ItalicExtension,
+    TableExtension,
+    BulletListExtension,
+    OrderedListExtension
+} from 'remirror/extensions';
+import {Remirror, useHelpers, useKeymap, useRemirror, useRemirrorContext} from '@remirror/react';
 
-// import { useHelpers, useRemirrorContext } from 'remirror';
+// // Hooks can be added to the context without the need for creating custom components
+const hooks = [
+    () => {
+        const {getJSON} = useHelpers();
 
-// export default { title: 'Editors / Wysiwyg' };
+        const handleSaveShortcut = useCallback(
+            ({state}) => {
+                console.log(`Save to backend: ${JSON.stringify(getJSON(state))}`);
 
-const SAMPLE_DOC = {
-    type: 'doc',
-    content: [
-        {
-            type: 'paragraph',
-            attrs: { dir: null, ignoreBidiAutoUpdate: null },
-            content: [{ type: 'text', text: 'Loaded content' }],
-        },
-    ],
-};
+                return true; // Prevents any further key handlers from being run.
+            },
+            [getJSON],
+        );
 
-// function LoadButton() {
-//     const { setContent } = useRemirrorContext();
-//     const handleClick = useCallback(() => setContent(SAMPLE_DOC), [setContent]);
-//
-//     return (
-//         <button onMouseDown={(event) => event.preventDefault()} onClick={handleClick}>
-//             Load
-//         </button>
-//     );
-// }
-//
-// function SaveButton() {
-//     const { getJSON } = useHelpers();
-//     const handleClick = useCallback(() => alert(JSON.stringify(getJSON())), [getJSON]);
-//
-//     return (
-//         <button onMouseDown={(event) => event.preventDefault()} onClick={handleClick}>
-//             Save
-//         </button>
-//     );
-// }
+        // "Mod" means platform agnostic modifier key - i.e. Ctrl on Windows, or Cmd on MacOS
+        useKeymap('Mod-s', handleSaveShortcut);
+    },
+];
 
-function Editor(){
+
+function Editor({content}){
+
+    useEffect(() => {
+        manager.view.updateState(manager.createState({ content: content }));
+    }, [content])
+
+    const { manager, state, onChange } = useRemirror({
+        extensions: () => [
+                new BoldExtension(),
+                new MarkdownExtension(),
+                new ItalicExtension(),
+                new OrderedListExtension(),
+                new BulletListExtension()
+            ],
+            content: content,
+            stringHandler: "markdown"
+    });
+
     return (
-        <WysiwygEditor placeholder='Start typing...'>
-            {/*<LoadButton />*/}
-            {/*<SaveButton />*/}
-        </WysiwygEditor>
+        <Remirror
+            manager={manager}
+            state={state}
+            onChange={onChange}
+            hooks={hooks}
+            autoRender='end'
+        />
     );
 };
 

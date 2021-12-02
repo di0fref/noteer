@@ -17,7 +17,8 @@ import {Router} from "react-router-dom";
 import Sidebar from "../components/nav/Sidebar";
 import NotesService from "../service/NotesService";
 import Dropdown from "../components/Dropdown";
-import {Modal, Tooltip} from "@mui/material";
+import {ListItem, ListItemText, Modal, Tooltip} from "@mui/material";
+import ReactDOM from "react-dom";
 
 const activeSide = "side ease-in-out w-96 transform-gpu transition-all_ fixed duration-700 flex justify-center p-2"
 const hiddenSide = "side ease-in-out w-96 transform-gpu transition-all_ fixed duration-700  flex justify-center p-2 -translate-x-96"
@@ -35,6 +36,7 @@ function Home() {
     const [dropped, setDropped] = useState(false);
     const [bookMarks, setBookMarks] = useState([]);
     const [bookMarked, setBookMarked] = useState(false)
+    const [noteCreated, setNoteCreated] = useState(false)
 
     /* Modal */
     const [open, setOpen] = useState(false);
@@ -50,6 +52,7 @@ function Home() {
             setTreeData(response.concat(notesWithoutFolder.data));
             setDropped(false);
             setBookMarked(false);
+            setNoteCreated(false)
         })();
 
         function handleResize() {
@@ -63,7 +66,7 @@ function Home() {
         }
 
         window.addEventListener('resize', handleResize)
-    }, [dropped, bookMarked])
+    }, [dropped, bookMarked, noteCreated])
 
     const droppedHandler = () => {
         setDropped(true);
@@ -95,6 +98,27 @@ function Home() {
 
     }
 
+    function uuidv4() {
+        return Date.now().toString(36) + Math.random().toString(36).substring(2);
+    }
+
+    const createNote = (e) => {
+        let id = uuidv4()
+        NotesService.create({
+            id: id,
+            name: "Untitled",
+            folder_id: folder || 0,
+            text:"{}"
+        }).then((result) => {
+            NotesService.get(id).then((result) => {
+                setNote(result.data[0])
+                setNoteCreated(true);
+                setClickedId(id);
+            })
+
+        })
+
+    }
     const setBookMark = (note) => {
         note.bookmark = !note.bookmark
         NotesService.update(note.id, note).then((result) => {
@@ -125,7 +149,7 @@ function Home() {
                                                     <FaRegFolder className={"w-5 h-5 text-muted hover:text-hover-accent"}/>
                                                 </button>
                                             </Tooltip>
-                                            <Tooltip title={"New Note"}>
+                                            <Tooltip title={"New Note"} onClick={createNote}>
                                                 <button className={"mx-2"}>
                                                     <FaFileAlt className={"w-5 h-5 text-muted hover:text-hover-accent"}/>
                                                 </button>
