@@ -17,12 +17,13 @@ import {Router} from "react-router-dom";
 import Sidebar from "../components/nav/Sidebar";
 import NotesService from "../service/NotesService";
 import Dropdown from "../components/Dropdown";
-import {Tooltip} from "@mui/material";
+import {Modal, Tooltip} from "@mui/material";
 
 const activeSide = "side ease-in-out w-96 transform-gpu transition-all_ fixed duration-700 flex justify-center p-2"
 const hiddenSide = "side ease-in-out w-96 transform-gpu transition-all_ fixed duration-700  flex justify-center p-2 -translate-x-96"
 const activeButton = "absolute w-10 h-10 bg-yellow -400 top-0 cursor-pointer transition-all_ transform duration-700 flex items-center justify-center"
 const normalButton = "absolute w-10 h-10 bg-yellow -400 top-0 cursor-pointer transition-all_ transform duration-700 flex items-center justify-center "
+
 
 function Home() {
     const [activeSidebar, setActiveSidebar] = useState(true)
@@ -33,6 +34,12 @@ function Home() {
     const [mobileView, setMobileView] = useState(false)
     const [dropped, setDropped] = useState(false);
     const [bookMarks, setBookMarks] = useState([]);
+    const [bookMarked, setBookMarked] = useState(false)
+
+    /* Modal */
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     useEffect(() => {
         (async () => {
@@ -42,6 +49,7 @@ function Home() {
             setBookMarks(bookmarks.data)
             setTreeData(response.concat(notesWithoutFolder.data));
             setDropped(false);
+            setBookMarked(false);
         })();
 
         function handleResize() {
@@ -55,7 +63,7 @@ function Home() {
         }
 
         window.addEventListener('resize', handleResize)
-    }, [dropped, note])
+    }, [dropped, bookMarked])
 
     const droppedHandler = () => {
         setDropped(true);
@@ -83,11 +91,16 @@ function Home() {
         setActiveSidebar(!activeSidebar);
     }
 
+    const createFolder = (parent_id) => {
+
+    }
+
     const setBookMark = (note) => {
         note.bookmark = !note.bookmark
         NotesService.update(note.id, note).then((result) => {
             NotesService.get(note.id).then((result) => {
                 setNote(result.data[0])
+                setBookMarked(true);
             })
         })
     }
@@ -120,21 +133,7 @@ function Home() {
                                         </div>
                                     </div>
                                 </div>
-
                                 <div className={"flex items-center"}>
-
-                                    {/*<div className={""}>*/}
-                                    {/*    <Dropdown values={[*/}
-                                    {/*        {*/}
-                                    {/*            label: "Profile",*/}
-                                    {/*            value: "profile"*/}
-                                    {/*        },*/}
-                                    {/*        {*/}
-                                    {/*            label: "Sign out",*/}
-                                    {/*            value: "logoff"*/}
-                                    {/*        }*/}
-                                    {/*    ]}/>*/}
-                                    {/*</div>*/}
                                     <div className={"mr-4"}>
                                         <button id="theme-toggle" className="" type="button">
                                             <span className="d-block-light d-none hover:text-hover-accent"><FaMoon/></span>
@@ -153,7 +152,6 @@ function Home() {
                     <Sidebar items={treeData} noteClicked={noteClicked} clicked_id={clickedId} droppedHandler={droppedHandler} bookmarks={bookMarks}/>
                 </div>
             </div>
-            {/*<Notes/>*/}
             <Content activeSidebar={activeSidebar} note={note} setBookMark={setBookMark}/>
         </>
     )

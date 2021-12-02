@@ -24,6 +24,9 @@ import NotesService from "../../service/NotesService";
 import {Link} from "react-router-dom";
 import Trash from "../Trash";
 import ReactTooltip from 'react-tooltip';
+import Moment from "react-moment";
+
+var moment = require('moment');
 
 function SidebarItem(props, {isDragging, tool}) {
 
@@ -101,13 +104,27 @@ function SidebarItem(props, {isDragging, tool}) {
     useEffect(() => {
     }, [props.clicked_id])
 
+    const formatDate = (date) => {
+        return moment(date).format("YYYY-M-d H:m")
+    }
     return (
-        // <div key={`aa-${props.items.id}`} id={`aa-${props.items.id}`}>
+
         <>
             <ReactTooltip/>
             <Tooltip
                 placement={"right"}
-                title={(props.items.type == "note") ? props.items.date_modified : ""}>
+                arrow
+                title={
+                    (props.items.type == "note")
+                        ? (
+                            <div className={"text-center"}>
+                                <p>Last modified at: {formatDate(props.items.date)}</p>
+                                <p>Created at: {formatDate(props.items.date)}</p>
+                            </div>
+
+                        )
+                        : ""
+                }>
                 <ListItem button dense
                           id={props.items.id}
                           ref={attacheRef}
@@ -122,8 +139,8 @@ function SidebarItem(props, {isDragging, tool}) {
                           }
                           disableRipple disableTouchRipple
                           className={`${isActive ? "sidebar-active" : ""}`}
-                          // data-tip={(props.items.type == "note") ? props.items.date_modified : ""}
-                          // data-offset="{'top': 0, 'right': 100}"
+                    // data-tip={(props.items.type == "note") ? props.items.date_modified : ""}
+                    // data-offset="{'top': 0, 'right': 100}"
                 >
 
                     <ListItemText style={{paddingLeft: props.depth * props.depthStep * 3}} key={`cc-${props.items.id}`}>
@@ -277,12 +294,6 @@ function Sidebar(props) {
             >
 
                 <Box className={"modal"}>
-                    {/*<Typography id="modal-modal-title" variant="h6" component="h2">*/}
-                    {/*    Text in a modal*/}
-                    {/*</Typography>*/}
-                    {/*<Typography id="modal-modal-description" sx={{mt: 2}}>*/}
-                    {/*    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.*/}
-                    {/*</Typography>*/}
                     <Trash/>
                 </Box>
             </Modal>

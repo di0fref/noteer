@@ -279,8 +279,7 @@ input {
 	font-size: 0.875rem !important;
 	line-height: 1.25rem !important;
 	background-color: var(--background-modifier-cover) !important;
-	/*padding: 10px!important;*/
-}
-.MuiTooltip-Arrow{
-	color: var(--background-modifier-cover) !important;
+	padding-left: 1em !important;
+	padding-right: 1em !important;
+
 }
