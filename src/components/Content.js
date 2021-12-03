@@ -4,7 +4,6 @@ import Dropdown from "./Dropdown";
 import NotesService from "../service/NotesService";
 import {Tooltip} from "@mui/material";
 import Editor from "./Editor";
-
 function Content(props) {
 
     const [note, setNote] = useState(props.note)

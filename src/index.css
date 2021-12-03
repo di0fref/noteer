@@ -297,13 +297,15 @@ p{
 /*}*/
 
 .ProseMirror-focused{
-	background-color: transparent;
-	border: 0;
-	padding: 5px;
-	resize: none;
-	min-height: 200px;
-	border: none;
-	background-color: transparent;
-	resize: none;
-	outline: none;
+	/*background-color: transparent;*/
+	/*border: 0;*/
+	/*padding: 5px;*/
+	/*resize: none;*/
+	/*min-height: 200px;*/
+	/*border: none;*/
+	/*background-color: transparent;*/
+	/*resize: none;*/
+	/*outline: none;*/
+	caret-color: var(--text-accent);
 }
+

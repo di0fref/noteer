@@ -4,6 +4,23 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.4.2",
+    "@editorjs/checklist": "latest",
+    "@editorjs/code": "latest",
+    "@editorjs/delimiter": "latest",
+    "@editorjs/editorjs": "latest",
+    "@editorjs/embed": "latest",
+    "@editorjs/header": "latest",
+    "@editorjs/image": "latest",
+    "@editorjs/inline-code": "latest",
+    "@editorjs/link": "latest",
+    "@editorjs/list": "latest",
+    "@editorjs/marker": "latest",
+    "@editorjs/paragraph": "latest",
+    "@editorjs/quote": "latest",
+    "@editorjs/raw": "latest",
+    "@editorjs/simple-image": "latest",
+    "@editorjs/table": "latest",
+    "@editorjs/warning": "latest",
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
     "@grubersjoe/slide-menu": "^1.2.3",
@@ -28,6 +45,7 @@
     "react-dnd": "^14.0.4",
     "react-dnd-html5-backend": "^14.0.2",
     "react-dom": "^17.0.2",
+    "react-editor-js": "^2.0.3",
     "react-icons": "^4.3.1",
     "react-minimal-side-navigation": "^1.9.2",
     "react-moment": "^1.1.1",
@@ -66,8 +84,13 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.11",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
     "autoprefixer": "^9.8.8",
     "postcss": "^7.0.39",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
+    "typescript": "^4.5.2"
   }
 }
