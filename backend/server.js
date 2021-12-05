@@ -236,7 +236,18 @@ app.get("/notes/bookmarks", (req, res) => {
     );
 });
 
-
+app.put("/note/save/:id", (req, res) => {
+	db.query(
+		"update notes set text = ? where id = ?",
+		[req.body.text, req.params.id],
+		(err, result) => {
+			if (err) {
+				console.log(err);
+			} else {
+				res.send(result);
+			}
+		})
+})
 app.get("/notes/search", (req, res) => {
     db.query(
         "SELECT *, name as label, concat('note') as type from notes where folder_id = ?",

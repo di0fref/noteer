@@ -13,20 +13,22 @@ import {
     FaSun
 } from "react-icons/all";
 import FolderService from "../service/FolderService";
-import {Router} from "react-router-dom";
+import {Router, useParams} from "react-router-dom";
 import Sidebar from "../components/nav/Sidebar";
 import NotesService from "../service/NotesService";
 import Dropdown from "../components/Dropdown";
 import {ListItem, ListItemText, Modal, Tooltip} from "@mui/material";
 import ReactDOM from "react-dom";
+import useUrl from "../components/hooks/useUrl";
 
-const activeSide = "side ease-in-out w-96 transform-gpu transition-all_ fixed duration-700 flex justify-center p-2"
-const hiddenSide = "side ease-in-out w-96 transform-gpu transition-all_ fixed duration-700  flex justify-center p-2 -translate-x-96"
-const activeButton = "absolute w-10 h-10 bg-yellow -400 top-0 cursor-pointer transition-all_ transform duration-700 flex items-center justify-center"
-const normalButton = "absolute w-10 h-10 bg-yellow -400 top-0 cursor-pointer transition-all_ transform duration-700 flex items-center justify-center "
+const activeSide = "noprint side ease-in-out w-96 transform-gpu transition-all fixed duration-700 flex justify-center p-2"
+const hiddenSide = "noprint side ease-in-out w-96 transform-gpu transition-all fixed duration-700  flex justify-center p-2 -translate-x-96"
+const activeButton = "noprint absolute w-10 h-10 bg-yellow -400 top-0 cursor-pointer transition-all transform duration-700 flex items-center justify-center"
+const normalButton = "noprint absolute w-10 h-10 bg-yellow -400 top-0 cursor-pointer transition-all transform duration-700 flex items-center justify-center "
 
 
-function Home() {
+function Home(props) {
+
     const [activeSidebar, setActiveSidebar] = useState(true)
     const [treeData, setTreeData] = useState([]);
     const [note, setNote] = useState([])
@@ -37,6 +39,7 @@ function Home() {
     const [bookMarks, setBookMarks] = useState([]);
     const [bookMarked, setBookMarked] = useState(false)
     const [noteCreated, setNoteCreated] = useState(false)
+    let params = useParams();
 
     /* Modal */
     const [open, setOpen] = useState(false);
@@ -66,11 +69,34 @@ function Home() {
         }
 
         window.addEventListener('resize', handleResize)
+        var toggle = document.getElementById("theme-toggle");
+
+        var storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        if (storedTheme)
+            document.documentElement.setAttribute('data-theme', storedTheme)
+
+
+        toggle.onclick = function() {
+            var currentTheme = document.documentElement.getAttribute("data-theme");
+            var targetTheme = "light";
+
+            if (currentTheme === "light") {
+                targetTheme = "dark";
+            }
+
+            document.documentElement.setAttribute('data-theme', targetTheme)
+            localStorage.setItem('theme', targetTheme);
+        };
+
     }, [dropped, bookMarked, noteCreated])
 
     const droppedHandler = () => {
         setDropped(true);
     }
+    useUrl((type, id) => {
+        noteClicked(type, id)
+    }, [params])
+
     const noteClicked = (type, id) => {
         setClickedId(id);
         if (type === "note") {
@@ -88,6 +114,8 @@ function Home() {
         } else {
             setFolder(id);
         }
+
+
     }
 
     const toggleSidebar = () => {
@@ -108,16 +136,14 @@ function Home() {
             id: id,
             name: "Untitled",
             folder_id: folder || 0,
-            text:"{}"
+            text: ""
         }).then((result) => {
             NotesService.get(id).then((result) => {
                 setNote(result.data[0])
                 setNoteCreated(true);
                 setClickedId(id);
             })
-
         })
-
     }
     const setBookMark = (note) => {
         note.bookmark = !note.bookmark
@@ -131,13 +157,13 @@ function Home() {
     return (
         <>
             {/* HEADER */}
-            <div className={"ease-in-out transform-gpu transition-all duration-700"}>
+            <div className={"head noprint ease-in-out transform-gpu transition-all _fixed duration-70"}>
                 {/* HAMBURGER */}
                 <div className={activeSidebar ? normalButton : activeButton}
                      onClick={toggleSidebar}>
                     {activeSidebar ? <FaChevronLeft/> : <FaBars/>}
                 </div>
-                <div className={"topbar flex-grow h-10"}>
+                <div className={"topbar noprint flex-grow h-10"}>
                     <div className="flex-wrap overflow-hidden ">
                         <div className="flex-grow overflow-hidden ">
                             <div className={"flex justify-between"}>
@@ -171,12 +197,12 @@ function Home() {
                 </div>
             </div>
             {/*SIDEBAR */}
-            <div className="sidebar transform relative transition-all duration-700 ">
+            <div className="sidebar noprint transform relative transition-all duration-700 ">
                 <div className={`${activeSidebar ? activeSide : hiddenSide}`}>
-                    <Sidebar items={treeData} noteClicked={noteClicked} clicked_id={clickedId} droppedHandler={droppedHandler} bookmarks={bookMarks}/>
+                    <Sidebar note_id={note.id} items={treeData} noteClicked={noteClicked} clicked_id={clickedId} droppedHandler={droppedHandler} bookmarks={bookMarks}/>
                 </div>
             </div>
-            <Content activeSidebar={activeSidebar} note={note} setBookMark={setBookMark}/>
+            <Content noteClicked={noteClicked} activeSidebar={activeSidebar} note={note} setBookMark={setBookMark}/>
         </>
     )
 }

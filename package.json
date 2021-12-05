@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.4.2",
+    "@docusaurus/core": "^2.0.0-beta.9",
+    "@docusaurus/preset-classic": "^2.0.0-beta.9",
     "@editorjs/checklist": "latest",
     "@editorjs/code": "latest",
     "@editorjs/delimiter": "latest",
@@ -32,12 +34,14 @@
     "@remirror/pm": "^1.0.8",
     "@remirror/react": "^1.0.17",
     "@remirror/react-editors": "^0.1.35",
+    "@tailwindcss/typography": "^0.4.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@themesberg/flowbite": "^1.2.0",
     "axios": "^0.24.0",
     "easymde": "^2.15.0",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "primeicons": "^5.0.0",
     "primereact": "^7.0.1",
@@ -57,6 +61,7 @@
     "react-transition-group": "^4.4.2",
     "remirror": "^1.0.48",
     "styled-components": "^5.3.3",
+    "tocbot": "^4.17.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

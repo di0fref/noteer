@@ -37,6 +37,9 @@ class NotesService {
         return http.get(`/notes/bookmarks`);
 
     }
+    saveText(id, data){
+        return http.put(`/note/save/${id}`, data);
+    }
 }
 
 export default new NotesService();

@@ -1,0 +1,18 @@
+@media print {
+    * {
+        background: white !important;
+        color:#2e3338 !important;
+    }
+    .noprint{
+        display: none !important;
+        height: 0 !important;
+    }
+    .side{
+        --tw-translate-y: 24rem;
+    }
+    .content, .prose *{
+        margin:0 !important;
+        color: #2e3338 !important;
+        display: block;
+    }
+}

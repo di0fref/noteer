@@ -25,6 +25,7 @@ import {Link} from "react-router-dom";
 import Trash from "../Trash";
 import Moment from "react-moment";
 import ArrowTooltips from "../Tooltip";
+import MyLink from "../Link";
 
 var moment = require('moment');
 
@@ -101,68 +102,74 @@ function SidebarItem(props, {isDragging, tool}) {
     };
 
 
-    useEffect(() => {
-    }, [props.clicked_id])
+    // useEffect(() => {
+    // }, [props.clicked_id])
 
     const formatDate = (date) => {
         return moment(date).format("YYYY-M-d H:m")
     }
+
     return (
 
         <>
-            <ArrowTooltips
-                placement={"right"}
-                arrow
-                title={
-                    (props.items.type == "note")
-                        ? (
-                            <div className={"text-center"}>
-                                <p>Last modified at: {formatDate(props.items.date)}</p>
-                                <p>Created at: {formatDate(props.items.date)}</p>
+
+            <MyLink type={props.items.type} id={props.items.id}>
+                <ArrowTooltips
+                    placement={"right"}
+                    arrow
+                    title={
+                        (props.items.type == "note")
+                            ? (
+                                <div className={"text-center"}>
+                                    <p>Last modified at: {formatDate(props.items.date)}</p>
+                                    <p>Created at: {formatDate(props.items.date)}</p>
+                                </div>
+                            )
+                            : ""
+                    }>
+                    <ListItem button dense
+                              id={`item-${props.items.id}`}
+                              ref={attacheRef}
+                              style={{opacity}}
+                              role="card"
+                              onClick={() => {
+                                  handleClick(props.items.type, props.items.id);
+                              }}
+                              key={`bb-${props.items.id}`}
+                              selected={
+                                  (props.items.id === props.note_id) ? true : false
+                              }
+                              disableRipple disableTouchRipple
+                              className={`${isActive ? "sidebar-active" : ""}`}
+                    >
+
+                        <ListItemText style={{paddingLeft: props.depth * props.depthStep * 3}} key={`cc-${props.items.id}`}>
+                            <div className={'flex justify-start items-center'}>
+
+                                {(props.icon === true)
+                                    ?
+                                    (props.items.type == "folder")
+                                        ? <FaRegFolder className={`icon`}/>
+                                        : <FaFileAlt className={`icon`}/>
+
+                                    : null}
+
+                                <div className={`ml-2 text-s ${props.class}`}>
+
+                                    {props.items.label}
+
+                                    {/*{isDragging?"Dragging": "not"}*/}
+                                </div>
                             </div>
+                        </ListItemText>
+                        {(props.items.items && props.items.items.length > 0)
+                            ? open ? <ExpandLess/> : <ExpandMore/>
+                            : null}
+                        {/*<span className={`text-sm text-muted`}>{count}</span>*/}
+                    </ListItem>
 
-                        )
-                        : ""
-                }>
-                <ListItem button dense
-                          id={`item-${props.items.id}`}
-                          ref={attacheRef}
-                          style={{opacity}}
-                          role="card"
-                          onClick={() => {
-                              handleClick(props.items.type, props.items.id);
-                          }}
-                          key={`bb-${props.items.id}`}
-                          selected={
-                              (props.items.id === props.clicked_id) ? true : false
-                          }
-                          disableRipple disableTouchRipple
-                          className={`${isActive ? "sidebar-active" : ""}`}
-                >
-
-                    <ListItemText style={{paddingLeft: props.depth * props.depthStep * 3}} key={`cc-${props.items.id}`}>
-                        <div className={'flex justify-start items-center'}>
-
-                            {(props.icon === true)
-                                ?
-                                (props.items.type == "folder")
-                                    ? <FaRegFolder className={`icon`}/>
-                                    : <FaFileAlt className={`icon`}/>
-
-                                : null}
-
-                            <div className={`ml-2 text-s ${props.class}`}>
-                                {`${props.items.label ? props.items.label : '\u00a0'}`}
-                                {/*{isDragging?"Dragging": "not"}*/}
-                            </div>
-                        </div>
-                    </ListItemText>
-                    {(props.items.items && props.items.items.length > 0)
-                        ? open ? <ExpandLess/> : <ExpandMore/>
-                        : null}
-                    {/*<span className={`text-sm text-muted`}>{count}</span>*/}
-                </ListItem>
-            </ArrowTooltips>
+                </ArrowTooltips>
+            </MyLink>
             {(props.items.items && props.items.items.length > 0) ? (
                 <div key={`er-${props.items.id}`}>
                     <Collapse in={open} timeout="auto" unmountOnExit key={`ee-${props.items.id}`}>
@@ -180,6 +187,7 @@ function SidebarItem(props, {isDragging, tool}) {
                                         droppedHandler={props.droppedHandler}
                                         class={""}
                                         icon={true}
+                                        note_id={props.note_id}
 
                                     />
                                 </div>
@@ -224,17 +232,9 @@ function Sidebar(props) {
     const handleClose = () => setOpen(false);
 
 
-    /* Dropref for moving items to root */
-    const dropref_item = {
-        "id": 0,
-        "label": "",
-        "type": "",
-        "items": []
-    }
-
-
     return (
         <div className="flex-grow">
+
             <SearchInput/>
             <h3 className={`text-xs pl-4 py-2 text-muted uppercase tracking-widest font-bold mb-2 mt-6`}>Bookmarks</h3>
             <div className={"ml-4 _text-sm"}>
@@ -261,28 +261,16 @@ function Sidebar(props) {
                         droppedHandler={props.droppedHandler}
                         class={""}
                         icon={true}
+                        note_id={props.note_id}
                     />
                 ))}
-
-                {/*Dropref for moving items to root */}
-
-                <SidebarItem
-                    key={`${dropref_item.name}`}
-                    depthStep={10}
-                    depth={0}
-                    noteClicked={props.noteClicked}
-                    items={dropref_item}
-                    clicked_id={props.clicked_id}
-                    droppedHandler={props.droppedHandler}
-                    class={"text-more-muted"}
-                    icon={false}
-                />
             </List>
-
-            <button className={"flex justify-start items-center hover:text-hover-accent text-sm ml-4 mt-1"} onClick={handleOpen}>
-                <span><FaTrashAlt className={"icon"}/></span>
-                <span className={"ml-2"}>Trash</span>
-            </button>
+            <ArrowTooltips title={"Open trash"}>
+                <button className={"flex justify-start items-center hover:text-hover-accent text-sm ml-4 mt-5"} onClick={handleOpen}>
+                    <span><FaTrashAlt className={"icon"}/></span>
+                    <span className={"ml-2"}>Trash</span>
+                </button>
+            </ArrowTooltips>
             <Modal
                 open={open}
                 onClose={handleClose}
