@@ -21,7 +21,7 @@ import {ListItem, ListItemText, Modal, Tooltip} from "@mui/material";
 import ReactDOM from "react-dom";
 import useUrl from "../components/hooks/useUrl";
 
-const activeSide = "noprint side ease-in-out w-96 transform-gpu transition-all fixed duration-700 flex justify-center p-2"
+const activeSide = "noprint  side ease-in-out w-96 transform-gpu transition-all fixed duration-700 flex justify-center p-2"
 const hiddenSide = "noprint side ease-in-out w-96 transform-gpu transition-all fixed duration-700  flex justify-center p-2 -translate-x-96"
 const activeButton = "noprint absolute w-10 h-10 bg-yellow -400 top-0 cursor-pointer transition-all transform duration-700 flex items-center justify-center"
 const normalButton = "noprint absolute w-10 h-10 bg-yellow -400 top-0 cursor-pointer transition-all transform duration-700 flex items-center justify-center "
@@ -69,24 +69,24 @@ function Home(props) {
         }
 
         window.addEventListener('resize', handleResize)
-        var toggle = document.getElementById("theme-toggle");
-
-        var storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-        if (storedTheme)
-            document.documentElement.setAttribute('data-theme', storedTheme)
-
-
-        toggle.onclick = function() {
-            var currentTheme = document.documentElement.getAttribute("data-theme");
-            var targetTheme = "light";
-
-            if (currentTheme === "light") {
-                targetTheme = "dark";
-            }
-
-            document.documentElement.setAttribute('data-theme', targetTheme)
-            localStorage.setItem('theme', targetTheme);
-        };
+        // var toggle = document.getElementById("theme-toggle");
+        //
+        // var storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        // if (storedTheme)
+        //     document.documentElement.setAttribute('data-theme', storedTheme)
+        //
+        //
+        // toggle.onclick = function() {
+        //     var currentTheme = document.documentElement.getAttribute("data-theme");
+        //     var targetTheme = "light";
+        //
+        //     if (currentTheme === "light") {
+        //         targetTheme = "dark";
+        //     }
+        //
+        //     document.documentElement.setAttribute('data-theme', targetTheme)
+        //     localStorage.setItem('theme', targetTheme);
+        // };
 
     }, [dropped, bookMarked, noteCreated])
 
@@ -157,52 +157,64 @@ function Home(props) {
     return (
         <>
             {/* HEADER */}
-            <div className={"head noprint ease-in-out transform-gpu transition-all _fixed duration-70"}>
-                {/* HAMBURGER */}
-                <div className={activeSidebar ? normalButton : activeButton}
-                     onClick={toggleSidebar}>
-                    {activeSidebar ? <FaChevronLeft/> : <FaBars/>}
-                </div>
-                <div className={"topbar noprint flex-grow h-10"}>
-                    <div className="flex-wrap overflow-hidden ">
-                        <div className="flex-grow overflow-hidden ">
-                            <div className={"flex justify-between"}>
-                                <div className={""}>
-                                    <div className={`transition-all duration-700 sidetop w-96 h-10 w-10 py-2 ${activeSidebar ? "" : "-ml-96"}`}>
-                                        <div className={"flex justify-center items-center"}>
-                                            <Tooltip title={"New Folder"}>
-                                                <button className={"mx-2"}>
-                                                    <FaRegFolder className={"w-5 h-5 text-muted hover:text-hover-accent"}/>
-                                                </button>
-                                            </Tooltip>
-                                            <Tooltip title={"New Note"} onClick={createNote}>
-                                                <button className={"mx-2"}>
-                                                    <FaFileAlt className={"w-5 h-5 text-muted hover:text-hover-accent"}/>
-                                                </button>
-                                            </Tooltip>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={"flex items-center"}>
-                                    <div className={"mr-4"}>
-                                        <button id="theme-toggle" className="" type="button">
-                                            <span className="d-block-light d-none hover:text-hover-accent"><FaMoon/></span>
-                                            <span className="d-block-dark d-none hover:text-hover-accent"><FaSun/></span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {/*<div className={"head noprint ease-in-out transform-gpu transition-all _fixed duration-70"}>*/}
+            {/*    /!* HAMBURGER *!/*/}
+            {/*    <div className={activeSidebar ? normalButton : activeButton}*/}
+            {/*         onClick={toggleSidebar}>*/}
+            {/*        {activeSidebar ? <FaChevronLeft/> : <FaBars/>}*/}
+            {/*    </div>*/}
+            {/*    <div className={"topbar noprint flex-grow h-10"}>*/}
+            {/*        <div className="flex-wrap overflow-hidden ">*/}
+            {/*            <div className="flex-grow overflow-hidden ">*/}
+            {/*                <div className={"flex justify-between"}>*/}
+            {/*                    <div className={""}>*/}
+            {/*                        <div className={`transition-all duration-700 sidetop w-96 h-10 w-10 py-2 ${activeSidebar ? "" : "-ml-96"}`}>*/}
+            {/*                            <div className={"flex justify-center items-center"}>*/}
+            {/*                                <Tooltip title={"New Folder"}>*/}
+            {/*                                    <button className={"mx-2"}>*/}
+            {/*                                        <FaRegFolder className={"w-5 h-5 text-muted hover:text-hover-accent"}/>*/}
+            {/*                                    </button>*/}
+            {/*                                </Tooltip>*/}
+            {/*                                <Tooltip title={"New Note"} onClick={createNote}>*/}
+            {/*                                    <button className={"mx-2"}>*/}
+            {/*                                        <FaFileAlt className={"w-5 h-5 text-muted hover:text-hover-accent"}/>*/}
+            {/*                                    </button>*/}
+            {/*                                </Tooltip>*/}
+            {/*                            </div>*/}
+            {/*                        </div>*/}
+            {/*                    </div>*/}
+            {/*                    <div className={"flex items-center"}>*/}
+            {/*                        <div className={"mr-4"}>*/}
+            {/*                            <button id="theme-toggle" className="" type="button">*/}
+            {/*                                <span className="d-block-light d-none hover:text-hover-accent"><FaMoon/></span>*/}
+            {/*                                <span className="d-block-dark d-none hover:text-hover-accent"><FaSun/></span>*/}
+            {/*                            </button>*/}
+            {/*                        </div>*/}
+            {/*                    </div>*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
             {/*SIDEBAR */}
             <div className="sidebar noprint transform relative transition-all duration-700 ">
                 <div className={`${activeSidebar ? activeSide : hiddenSide}`}>
-                    <Sidebar note_id={note.id} items={treeData} noteClicked={noteClicked} clicked_id={clickedId} droppedHandler={droppedHandler} bookmarks={bookMarks}/>
+                    <Sidebar
+                        toggleSidebar={toggleSidebar}
+                        mobileView={mobileView}
+                        createNote={createNote} note_id={note.id} items={treeData} noteClicked={noteClicked} clicked_id={clickedId} droppedHandler={droppedHandler} bookmarks={bookMarks}/>
                 </div>
             </div>
-            <Content noteClicked={noteClicked} activeSidebar={activeSidebar} note={note} setBookMark={setBookMark}/>
+            <Content
+                noteClicked={noteClicked}
+                activeSidebar={activeSidebar}
+                normalButton={normalButton}
+                activeButton={activeButton}
+                activeSide={activeSide}
+                hiddenSide={hiddenSide}
+                toggleSidebar={toggleSidebar}
+                note={note}
+                setBookMark={setBookMark}/>
         </>
     )
 }

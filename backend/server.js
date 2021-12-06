@@ -238,8 +238,8 @@ app.get("/notes/bookmarks", (req, res) => {
 
 app.put("/note/save/:id", (req, res) => {
 	db.query(
-		"update notes set text = ? where id = ?",
-		[req.body.text, req.params.id],
+		"update notes set text = ?, date_modified = ? where id = ?",
+		[req.body.text, getDateModified(), req.params.id],
 		(err, result) => {
 			if (err) {
 				console.log(err);

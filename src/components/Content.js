@@ -36,38 +36,45 @@ function Content(props) {
             {/*</label>*/}
             {/*</div>*/}
 
-            <div className={` ${props.activeSidebar ? "ml-96 hidden md:block print:block" : ""}  ease-in-out transform-gpu transition-all duration-700 content -m t-10`}>
-                <div className={"note-content flex flex-col"}>
-                    <div className={"content-header flex-grow px-6 mt-1"}>
-                        <div className={"flex justify-start items-center "}>
+            <div className={` ${props.activeSidebar ? "ml-96 hidden md:block" : ""} h-screen ease-in-out transform-gpu transition-all duration-700 content -m t-10`}>
+                {/*<div className={"note-content flex flex-col"}>*/}
+                {/*    <div className={"content-header flex-grow px-6 mt-1"}>*/}
+                {/*        <div className={"flex justify-start items-center "}>*/}
 
-                            {note
-                                ? (
-                                    <>
-                                        <Tooltip title={`${note.bookmark ? "Remove Bookmark" : "Set Bookmark"}`}>
-                                            <button onClick={() => props.setBookMark(note)} >
-                                                <FaStar className={` noprint icon ${note.bookmark ? "text-accent" : null}`}/>
-                                            </button>
-                                        </Tooltip>
-                                        <div className={"ml-2 font-semibold"}>
-                                            Customers / {note.name}
-                                        </div>
-                                    </>
-                                )
-                                : (null)
-                            }
+                {/*            {note*/}
+                {/*                ? (*/}
+                {/*                    <>*/}
+                {/*                        <Tooltip title={`${note.bookmark ? "Remove Bookmark" : "Set Bookmark"}`}>*/}
+                {/*                            <button onClick={() => props.setBookMark(note)} >*/}
+                {/*                                <FaStar className={` noprint icon ${note.bookmark ? "text-accent" : null}`}/>*/}
+                {/*                            </button>*/}
+                {/*                        </Tooltip>*/}
+                {/*                        <div className={"ml-2 font-semibold"}>*/}
+                {/*                            Customers / {note.name}*/}
+                {/*                        </div>*/}
+                {/*                    </>*/}
+                {/*                )*/}
+                {/*                : (null)*/}
+                {/*            }*/}
 
-                        </div>
-                    </div>
-                    <div className={"p-6 flex-grow text-base"}>
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*    <div className={"p-6 flex-grow text-base"}>*/}
 
                         {note
                             ?
-                        <ReplaceContentImperative note={note}/>
+                        <ReplaceContentImperative
+                            note={note}
+                            activeSidebar={props.activeSidebar}
+                            normalButton={props.normalButton}
+                            activeButton={props.activeButton}
+                            activeSide={props.activeSide}
+                            toggleSidebar={props.toggleSidebar}
+                            hiddenSide={props.hiddenSide}/>
                             : ""}
 
-                    </div>
-                </div>
+                {/*    </div>*/}
+                {/*</div>*/}
             </div>
         </>
     )

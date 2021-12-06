@@ -21,7 +21,10 @@ import NotesService from "../service/NotesService";
 import {prosemirrorNodeToHtml} from 'remirror';
 import {AllStyledComponent} from "@remirror/styles/emotion";
 import type {ToolbarItemUnion} from "@remirror/react";
-import tocbot from "tocbot";
+import {FaBars, FaMoon, FaSun} from "react-icons/all";
+import {Tooltip} from "@mui/material";
+import Moment from "react-moment";
+import moment from "moment";
 
 export interface EditorRef {
     setContent: (content: any) => void;
@@ -154,19 +157,31 @@ const ImperativeHandle = forwardRef((_: unknown, ref: Ref<EditorRef>) => {
 });
 const ReplaceContentImperative = (props: any): JSX.Element => {
 
+    const [dateModified, setDateModified] = useState("")
     useEffect(() => {
-        editorRef.current!.setContent(props.note.text)
+        if(props.note.id) {
+            editorRef.current!.setContent(props.note.text)
+        }
 
-        // let doc = Array.from(document.querySelectorAll("h1, h2, h3, h4, h5, h6"));
-        // doc.forEach(function (element, index) {
-        //     element.id = "doc-id" + index;
-        // })
-        //
-        // tocbot.init({
-        //     tocSelector: '.js-toc',
-        //     contentSelector: '.remirror-editor-wrapper',
-        //     headingSelector: 'h1, h2, h3, h4, h5, h6',
-        // })
+        var toggle = document.getElementById("theme-toggle");
+
+        var storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        if (storedTheme)
+            document.documentElement.setAttribute('data-theme', storedTheme)
+
+
+        // @ts-ignore
+        toggle.onclick = function() {
+            var currentTheme = document.documentElement.getAttribute("data-theme");
+            var targetTheme = "light";
+
+            if (currentTheme === "light") {
+                targetTheme = "dark";
+            }
+
+            document.documentElement.setAttribute('data-theme', targetTheme)
+            localStorage.setItem('theme', targetTheme);
+        };
 
     }, [props.note])
 
@@ -187,7 +202,7 @@ const ReplaceContentImperative = (props: any): JSX.Element => {
     }, 100);
 
     return (
-        <div className={"prose"}>
+        <div className={"prose_ "}>
             <AllStyledComponent>
                 <ThemeProvider>
                     <Remirror
@@ -197,18 +212,49 @@ const ReplaceContentImperative = (props: any): JSX.Element => {
                         // hooks={hooks}
                         onChange={
                             (parameter) => {
-                                if (props.note.id) {
-                                    clearTimeout(timer);
-                                    timer = setTimeout(() => {
+                                // if (props.note.id) {
+                                //     clearTimeout(timer);
+                                //     timer = setTimeout(() => {
                                         saveToBackend(props.note.id, parameter)
-                                    }, 2000);
-                                }
+                                setDateModified(moment().format("YYYY-MM-DD HH:mm:ss"))
+                                //     }, 2000);
+                                // }
+
                             }}
                     >
-                        <div className={"noprint"}>
-                            <Toolbar items={toolbarItems} refocusEditor label="Top Toolbar"/>
+                        <div className={"h-14 px-4 flex justify-start items-center editor-header "}>
+                            <div>
+                                <Tooltip title={"Toggle menu"}>
+                                    <button onClick={props.toggleSidebar}>
+                                        <FaBars/>
+                                    </button>
+                                </Tooltip>
+                            </div>
+                            <div className={"noprint ml-4"}>
+                                {props.note.id
+                                ? <Toolbar items={toolbarItems} refocusEditor label="Top Toolbar"/>
+                                    : null}
+                            </div>
+                            <div className={"pt-1 ml-auto"}>
+                                <button id="theme-toggle" className="" type="button">
+                                    <span className="d-block-light d-none hover:text-hover-accent"><FaMoon/></span>
+                                    <span className="d-block-dark d-none hover:text-hover-accent"><FaSun/></span>
+                                </button>
+                            </div>
                         </div>
-                        <ImperativeHandle ref={editorRef}/>
+                        <div className={"editor-main"}>
+                            <div className={"flex justify-center items-center"}>
+                                <div className={"editor-date text-sm text-more-muted pt-2"}>
+                                    {props.note.id
+                                    ? <Moment date={dateModified} format={"D MMMM YYYY [at] HH:mm"}/>
+                                        :null}
+                                </div>
+                            </div>
+                            {props.note.id
+                                ? <ImperativeHandle ref={editorRef}/>
+                                : ""
+                            }
+                        </div>
                     </Remirror>
                 </ThemeProvider>
             </AllStyledComponent>

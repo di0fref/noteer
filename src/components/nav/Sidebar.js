@@ -10,7 +10,7 @@ import {
     FaFileAlt, FaFolder,
     FaRegFolder,
     FaRegFolderOpen,
-    FaStar,
+    FaStar, FaTimes,
     FaTrash,
     FaTrashAlt
 } from "react-icons/all";
@@ -217,7 +217,6 @@ function NotebookHeader({text}) {
             <h3 className={`py-2 text-xs pl-4 text-muted uppercase tracking-widest font-bold  mt-4 ${isActive ? "sidebar-active" : ""}`}
                 ref={drop}
                 id={"notebook-header"}
-                // style={{opacity}}
                 role="card"
             >{text}</h3>
         </div>
@@ -235,6 +234,31 @@ function Sidebar(props) {
     return (
         <div className="flex-grow">
 
+            <div className={"flex justify-between items-center p-4"}>
+                <div>
+                    <Tooltip title={"New Folder"}>
+                        <button className={"mx-2"}>
+                            <FaRegFolder className={"w-5 h-5 text-muted hover:text-hover-accent"}/>
+                        </button>
+                    </Tooltip>
+                </div>
+                <div>
+                    <Tooltip title={"New Note"} onClick={props.createNote}>
+                        <button className={"mx-2"}>
+                            <FaFileAlt className={"w-5 h-5 text-muted hover:text-hover-accent"}/>
+                        </button>
+                    </Tooltip>
+                </div>
+                <div className={"ml-auto"}>
+                    {(props.mobileView) ?
+                        (<Tooltip title={"Hide menu"}>
+                            <button onClick={props.toggleSidebar}>
+                                <FaTimes/>
+                            </button>
+                        </Tooltip>)
+                        : ""}
+                </div>
+            </div>
             <SearchInput/>
             <h3 className={`text-xs pl-4 py-2 text-muted uppercase tracking-widest font-bold mb-2 mt-6`}>Bookmarks</h3>
             <div className={"ml-4 _text-sm"}>
